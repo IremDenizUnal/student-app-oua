@@ -13,6 +13,12 @@ class messagespage extends StatefulWidget {
 
 class _messagespageState extends State<messagespage> {
   @override
+  void initState() {
+   widget.messagesRepository.newMessagesNumber = 0;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

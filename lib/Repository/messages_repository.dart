@@ -1,3 +1,5 @@
+import 'package:ogrenci_app/messages_page.dart';
+
 class MessagesRepository {
   final List<Message> messages = [
     Message("Hi", "Ali", DateTime.now().subtract(const Duration(minutes: 1))),
@@ -6,6 +8,8 @@ class MessagesRepository {
     Message("I am fine thanks", "Ali",
         DateTime.now().subtract(const Duration(minutes: 3))),
   ];
+
+  int newMessagesNumber = 3;
 }
 
 class Message {

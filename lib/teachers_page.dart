@@ -16,28 +16,53 @@ class _teacherspageState extends State<teacherspage> {
       appBar: AppBar(title: const Text('Teachers')),
       body: Column(
         children: [
-          const PhysicalModel(
+          PhysicalModel(
             color: Colors.white,
             elevation: 10,
             child: Center(
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 32.0, horizontal: 32.0),
-                child: Text('10 Teachers'),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 32.0, horizontal: 32.0),
+                child: Text(
+                    '${widget.teachersRepository.teachers.length} Teachers'),
               ),
             ),
           ),
           Expanded(
-            child: ListView.separated(
-              itemBuilder: (context, index) => const ListTile(
-                title: Text('Ayşe'),
-                leading: Text('👩‍🦰'), //👨‍🦰
-              ),
-              separatorBuilder: (context, index) => const Divider(),
-              itemCount: 25,
-            ),
-          ),
+              child: ListView.separated(
+                  itemBuilder: (context, index) => TeachersLine(
+                        widget.teachersRepository.teachers[index],
+                        widget.teachersRepository,
+                      ), //alt enterla student olusturduk asagıda
+                  separatorBuilder: (context, index) => const Divider(),
+                  itemCount: widget.teachersRepository.teachers.length))
         ],
       ),
+    );
+  }
+}
+
+class TeachersLine extends StatefulWidget {
+  final teacher teachers;
+  final TeachersRepository teachersRepository;
+  const TeachersLine(
+    this.teachers,
+    this.teachersRepository, {
+    super.key,
+  });
+
+  @override
+  State<TeachersLine> createState() => _TeachersLineState();
+}
+
+class _TeachersLineState extends State<TeachersLine> {
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(widget.teachers.name + " " + widget.teachers.surname),
+      leading: IntrinsicWidth(
+          child: Center(
+              child: Text(widget.teachers.gender == "woman" ? "👩" : " 🧑"))),
     );
   }
 }

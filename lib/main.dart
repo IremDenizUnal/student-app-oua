@@ -50,7 +50,7 @@ class _MainPageState extends State<MainPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextButton(
-              child: Text('${messagesRepository.messages.length} new message'),
+              child: Text('${messagesRepository.newMessagesNumber} new message'),
               onPressed: () {
                 _goMessages(context);
               },
@@ -120,11 +120,15 @@ class _MainPageState extends State<MainPage> {
     ));
   }
 
-  void _goMessages(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(
+  Future<void> _goMessages(BuildContext context) async {
+    await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) {
         return messagespage(messagesRepository);
       },
     ));
+    setState(() {
+      //yukarıda await ekleyip değişimini daha kolay gördük ama bundan verimli yollar var.
+      //burada kendimiz kontrol ediyoruz.(state managementta problem olmayacak.
+    });
   }
 }
