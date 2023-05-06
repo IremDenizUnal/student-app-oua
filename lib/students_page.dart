@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ogrenci_app/Repository/students_repository.dart';
 
-class StudentsPage extends StatefulWidget {
-  final StudentsRepository studentsRepository;
-  const StudentsPage(this.studentsRepository, {Key? key}) : super(key: key);
+class StudentsPage extends ConsumerWidget {
+  const StudentsPage({Key? key}) : super(key: key);
 
   @override
-  State<StudentsPage> createState() => _StudentsPageState();
-}
-
-class _StudentsPageState extends State<StudentsPage> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final studentsRepository = ref.watch(studentsProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text('Students'),
@@ -25,52 +21,42 @@ class _StudentsPageState extends State<StudentsPage> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                     vertical: 32.0, horizontal: 32.0),
-                child: Text(
-                    "${widget.studentsRepository.students.length} students"),
+                child: Text("${studentsRepository.students.length} students"),
               ),
             ),
           ),
           Expanded(
               child: ListView.separated(
                   itemBuilder: (context, index) => StudentsLine(
-                        widget.studentsRepository.students[index],
-                        widget.studentsRepository,
+                        studentsRepository.students[index],
                       ), //alt enterla student olusturduk asagıda
                   separatorBuilder: (context, index) => const Divider(),
-                  itemCount: widget.studentsRepository.students.length))
+                  itemCount: studentsRepository.students.length))
         ],
       ),
     );
   }
 }
 
-class StudentsLine extends StatefulWidget {
+class StudentsLine extends ConsumerWidget {
   final student students;
-  final StudentsRepository studentsRepository;
+
   const StudentsLine(
-    this.students,
-    this.studentsRepository, {
+    this.students, {
     super.key,
   });
 
   @override
-  State<StudentsLine> createState() => _StudentsLineState();
-}
-
-class _StudentsLineState extends State<StudentsLine> {
-  @override
-  Widget build(BuildContext context) {
-    bool doILike = widget.studentsRepository.doILike(widget.students);
+  Widget build(BuildContext context, WidgetRef ref) {
+    bool doILike = ref.watch(studentsProvider).doILike(students);
     return ListTile(
-      title: Text(widget.students.name + " " + widget.students.surname),
+      title: Text(students.name + " " + students.surname),
       leading: IntrinsicWidth(
-          child: Center(
-              child: Text(widget.students.gender == "woman" ? "👩" : " 🧑"))),
+          child:
+              Center(child: Text(students.gender == "woman" ? "👩" : " 🧑"))),
       trailing: IconButton(
           onPressed: () {
-            setState(() {
-              widget.studentsRepository.like(widget.students, !doILike);
-            });
+            ref.read(studentsProvider).like(students, !doILike);
           },
           icon: Icon(doILike ? Icons.favorite : Icons.favorite_border)),
     );

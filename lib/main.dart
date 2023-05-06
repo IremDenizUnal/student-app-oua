@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ogrenci_app/Repository/messages_repository.dart';
 import 'package:ogrenci_app/Repository/students_repository.dart';
 import 'package:ogrenci_app/Repository/teachers_repository.dart';
@@ -7,7 +8,7 @@ import 'package:ogrenci_app/students_page.dart';
 import 'package:ogrenci_app/teachers_page.dart';
 
 void main() {
-  runApp(const OgrenciApp());
+  runApp(const ProviderScope(child: const OgrenciApp()));
 }
 
 class OgrenciApp extends StatelessWidget {
@@ -25,32 +26,25 @@ class OgrenciApp extends StatelessWidget {
   }
 }
 
-class MainPage extends StatefulWidget {
+class MainPage extends ConsumerWidget {
   const MainPage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  State<MainPage> createState() => _MainPageState();
-}
-
-class _MainPageState extends State<MainPage> {
-  MessagesRepository messagesRepository = MessagesRepository();
-  StudentsRepository studentsRepository = StudentsRepository();
-  TeachersRepository teachersRepository = TeachersRepository();
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final studentsRepository = ref.watch(studentsProvider);
+    final teachersRepository = ref.watch(teachersProvider);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(title),
       ),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextButton(
-              child: Text('${messagesRepository.newMessagesNumber} new message'),
+              child: Text('${ref.watch(newMessageNumberProvider)} new message'),
               onPressed: () {
                 _goMessages(context);
               },
@@ -107,7 +101,7 @@ class _MainPageState extends State<MainPage> {
   void _goStudents(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) {
-        return StudentsPage(studentsRepository);
+        return const StudentsPage();
       },
     ));
   }
@@ -115,7 +109,7 @@ class _MainPageState extends State<MainPage> {
   void _goTeachers(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) {
-        return teacherspage(teachersRepository);
+        return const teacherspage();
       },
     ));
   }
@@ -123,12 +117,8 @@ class _MainPageState extends State<MainPage> {
   Future<void> _goMessages(BuildContext context) async {
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) {
-        return messagespage(messagesRepository);
+        return const messagespage();
       },
     ));
-    setState(() {
-      //yukarıda await ekleyip değişimini daha kolay gördük ama bundan verimli yollar var.
-      //burada kendimiz kontrol ediyoruz.(state managementta problem olmayacak.
-    });
   }
 }
