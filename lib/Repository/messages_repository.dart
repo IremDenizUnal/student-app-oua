@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ogrenci_app/messages_page.dart';
+import '../modals/message.dart';
 
 class MessagesRepository extends ChangeNotifier {
   final List<Message> messages = [
@@ -28,11 +29,3 @@ final newMessageNumberProvider =
     StateNotifierProvider<NewMessageNumber, int>((ref) {
   return NewMessageNumber(4);
 });
-
-class Message {
-  String text;
-  String sender;
-  DateTime time;
-
-  Message(this.text, this.sender, this.time);
-}

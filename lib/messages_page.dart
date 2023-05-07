@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ogrenci_app/Repository/messages_repository.dart';
+import 'modals/message.dart';
 
 class messagespage extends ConsumerStatefulWidget {
   const messagespage({Key? key}) : super(key: key);

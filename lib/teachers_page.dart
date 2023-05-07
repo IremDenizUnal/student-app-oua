@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ogrenci_app/Repository/teachers_repository.dart';
 
+import 'modals/teacher.dart';
+
 class teacherspage extends ConsumerWidget {
   const teacherspage({Key? key}) : super(key: key);
 
@@ -15,12 +17,26 @@ class teacherspage extends ConsumerWidget {
           PhysicalModel(
             color: Colors.white,
             elevation: 10,
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 32.0, horizontal: 32.0),
-                child: Text('${teachersRepository.teachers.length} Teachers'),
-              ),
+            child: Stack(
+              children: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 32.0, horizontal: 32.0),
+                    child:
+                        Text('${teachersRepository.teachers.length} Teachers'),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                    icon: Icon(Icons.download),
+                    onPressed: () {
+                      ref.read(teachersProvider).download();
+                    },
+                  ),
+                )
+              ],
             ),
           ),
           Expanded(
@@ -37,20 +53,20 @@ class teacherspage extends ConsumerWidget {
 }
 
 class TeachersLine extends StatelessWidget {
-  final teacher teachers;
+  final Teacher teacher;
 
   const TeachersLine(
-    this.teachers, {
+    this.teacher, {
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(teachers.name + " " + teachers.surname),
+      title: Text(teacher.name + " " + teacher.surname),
       leading: IntrinsicWidth(
           child:
-              Center(child: Text(teachers.gender == "woman" ? "👩" : " 🧑"))),
+              Center(child: Text(teacher.gender == "woman" ? "👩" : " 🧑"))),
     );
   }
 }

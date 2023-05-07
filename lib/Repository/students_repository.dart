@@ -1,36 +1,30 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ogrenci_app/modals/student.dart';
 
 class StudentsRepository extends ChangeNotifier {
   final students = [
-    student("Ali", "Yılmaz", 18, "Man"),
-    student("Ayşe", "Çelik", 28, "Woman")
+    Student("Ali", "Yılmaz", 18, "Man"),
+    Student("Ayşe", "Çelik", 28, "Woman")
   ];
-  final Set<student> myLikes = {};
 
-  void like(student students, bool doIlike) {
+
+  final Set<Student> myLikes = {};
+
+  void like(Student student, bool doIlike) {
     if (doIlike) {
-      myLikes.add(students);
+      myLikes.add(student);
     } else {
-      myLikes.remove(students);
+      myLikes.remove(student);
     }
     notifyListeners();
   }
 
-  bool doILike(student students) {
-    return myLikes.contains(students);
+  bool doILike(Student student) {
+    return myLikes.contains(student);
   }
 }
 
 final studentsProvider = ChangeNotifierProvider((ref) {
   return StudentsRepository();
 });
-
-class student {
-  String name;
-  String surname;
-  int age;
-  String gender;
-
-  student(this.name, this.surname, this.age, this.gender);
-}

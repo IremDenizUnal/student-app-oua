@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ogrenci_app/Repository/students_repository.dart';
 
+import 'modals/student.dart';
+
 class StudentsPage extends ConsumerWidget {
   const StudentsPage({Key? key}) : super(key: key);
 
@@ -39,24 +41,23 @@ class StudentsPage extends ConsumerWidget {
 }
 
 class StudentsLine extends ConsumerWidget {
-  final student students;
+  final Student student;
 
   const StudentsLine(
-    this.students, {
+    this.student, {
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    bool doILike = ref.watch(studentsProvider).doILike(students);
+    bool doILike = ref.watch(studentsProvider).doILike(student);
     return ListTile(
-      title: Text(students.name + " " + students.surname),
+      title: Text(student.name + " " + student.surname),
       leading: IntrinsicWidth(
-          child:
-              Center(child: Text(students.gender == "woman" ? "👩" : " 🧑"))),
+          child: Center(child: Text(student.gender == "woman" ? "👩" : " 🧑"))),
       trailing: IconButton(
           onPressed: () {
-            ref.read(studentsProvider).like(students, !doILike);
+            ref.read(studentsProvider).like(student, !doILike);
           },
           icon: Icon(doILike ? Icons.favorite : Icons.favorite_border)),
     );
