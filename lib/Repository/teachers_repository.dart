@@ -13,8 +13,8 @@ class TeachersRepository extends ChangeNotifier {
 final DataService dataService;
   TeachersRepository(this.dataService);
 
-  void download(){
-   Teacher teacher = dataService.teacherDownload();
+  Future<void> download() async {
+   Teacher teacher = await dataService.teacherDownload();
    teachers.add(teacher);
    notifyListeners();
 

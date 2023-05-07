@@ -29,12 +29,7 @@ class teacherspage extends ConsumerWidget {
                 ),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: IconButton(
-                    icon: Icon(Icons.download),
-                    onPressed: () {
-                      ref.read(teachersProvider).download();
-                    },
-                  ),
+                  child: TeacherDownloadButton(),
                 )
               ],
             ),
@@ -52,6 +47,54 @@ class teacherspage extends ConsumerWidget {
   }
 }
 
+class TeacherDownloadButton extends StatefulWidget {
+  const TeacherDownloadButton({
+    super.key,
+  });
+
+  @override
+  State<TeacherDownloadButton> createState() => _TeacherDownloadButtonState();
+}
+
+class _TeacherDownloadButtonState extends State<TeacherDownloadButton> {
+  bool isLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(builder: (context, ref, child) {
+      return isLoading
+          ? const CircularProgressIndicator()
+          : IconButton(
+              icon: const Icon(Icons.download),
+              onPressed: () async {
+                //TODO loading
+                //TODO error
+                try {
+                  setState(() {
+                    isLoading = true;
+                  });
+
+                  await ref.read(teachersProvider).download();
+                }catch(e){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(e.toString()))
+                  );
+
+                }
+
+
+                finally {
+
+                  setState(() {
+                    isLoading = false;
+                  });
+                }
+              },
+            );
+    });
+  }
+}
+
 class TeachersLine extends StatelessWidget {
   final Teacher teacher;
 
@@ -65,8 +108,7 @@ class TeachersLine extends StatelessWidget {
     return ListTile(
       title: Text(teacher.name + " " + teacher.surname),
       leading: IntrinsicWidth(
-          child:
-              Center(child: Text(teacher.gender == "woman" ? "👩" : " 🧑"))),
+          child: Center(child: Text(teacher.gender == "woman" ? "👩" : " 🧑"))),
     );
   }
 }
