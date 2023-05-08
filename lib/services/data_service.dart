@@ -16,6 +16,22 @@ class DataService {
       throw Exception('Failed to load Teacher ${response.statusCode}');
     }
   }
+
+  void addTeacher(Teacher teacher) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/teacher'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(teacher.toMap()),
+    );
+
+    if (response.statusCode == 201) {
+      return;
+    } else {
+      throw Exception('Failed to add Teacher ${response.statusCode}');
+    }
+  }
 }
 
 final dataServiceProvider = Provider((ref) {

@@ -109,7 +109,7 @@ class MainPage extends ConsumerWidget {
   void _goTeachers(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) {
-        return const teacherspage();
+        return const TeachersPage();
       },
     ));
   }

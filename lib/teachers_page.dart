@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ogrenci_app/Repository/teachers_repository.dart';
+import 'package:ogrenci_app/pages/teacher_form.dart';
 
 import 'modals/teacher.dart';
 
-class teacherspage extends ConsumerWidget {
-  const teacherspage({Key? key}) : super(key: key);
+class TeachersPage extends ConsumerWidget {
+  const TeachersPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,7 +28,7 @@ class teacherspage extends ConsumerWidget {
                         Text('${teachersRepository.teachers.length} Teachers'),
                   ),
                 ),
-                Align(
+                const Align(
                   alignment: Alignment.centerRight,
                   child: TeacherDownloadButton(),
                 )
@@ -42,6 +43,21 @@ class teacherspage extends ConsumerWidget {
                   separatorBuilder: (context, index) => const Divider(),
                   itemCount: teachersRepository.teachers.length))
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final created =
+              await Navigator.of(context).push<bool>(MaterialPageRoute(
+            builder: (context) {
+              return const TeacherForm();
+            },
+          ));
+
+          if (created == true) {
+            print("Reload teachers");
+          }
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -75,16 +91,10 @@ class _TeacherDownloadButtonState extends State<TeacherDownloadButton> {
                   });
 
                   await ref.read(teachersProvider).download();
-                }catch(e){
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(e.toString()))
-                  );
-
-                }
-
-
-                finally {
-
+                } catch (e) {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(e.toString())));
+                } finally {
                   setState(() {
                     isLoading = false;
                   });
@@ -106,7 +116,7 @@ class TeachersLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(teacher.name + " " + teacher.surname),
+      title: Text("${teacher.name} ${teacher.surname}"),
       leading: IntrinsicWidth(
           child: Center(child: Text(teacher.gender == "woman" ? "👩" : " 🧑"))),
     );

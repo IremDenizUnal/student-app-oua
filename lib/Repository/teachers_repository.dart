@@ -10,19 +10,16 @@ class TeachersRepository extends ChangeNotifier {
     Teacher("Ali", "Yılmaz", 18, "Erkek"),
     Teacher("Ayşe", "Çelik", 28, "Kadın")
   ];
-final DataService dataService;
+  final DataService dataService;
   TeachersRepository(this.dataService);
 
   Future<void> download() async {
-   Teacher teacher = await dataService.teacherDownload();
-   teachers.add(teacher);
-   notifyListeners();
-
+    Teacher teacher = await dataService.teacherDownload();
+    teachers.add(teacher);
+    notifyListeners();
   }
 }
 
 final teachersProvider = ChangeNotifierProvider((ref) {
-
   return TeachersRepository(ref.watch(dataServiceProvider));
 });
-
